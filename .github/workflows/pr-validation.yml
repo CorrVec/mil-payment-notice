@@ -31,15 +31,6 @@ jobs:
             doesn't match the configured pattern. Please ensure that the subject
             starts with an uppercase character.
           wip: false
-      
-      - name: Cache Maven
-        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
-        id: cache-maven
-        with:
-          key: apache-maven-3.9.6-bin.tar.gz
-          path: |
-            ${{ runner.temp }}/maven_setup.tar.gz
-            ${{ runner.temp }}/maven_setup.sha256
 
       - name: Download Maven and verify its hash
         if: steps.cache-maven.outputs.cache-hit != 'true'
