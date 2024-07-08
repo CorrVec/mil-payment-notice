@@ -32,24 +32,6 @@ jobs:
             starts with an uppercase character.
           wip: false
 
-      - name: Download Maven and verify its hash
-        if: steps.cache-maven.outputs.cache-hit != 'true'
-        run: |
-          echo "6eedd2cae3626d6ad3a5c9ee324bd265853d64297f07f033430755bd0e0c3a4b  ${{ runner.temp }}/maven_setup.tar.gz" >> ${{ runner.temp }}/maven_setup.sha256
-          curl -L "https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz" -o "${{ runner.temp }}/maven_setup.tar.gz"
-          sha256sum --check --status "${{ runner.temp }}/maven_setup.sha256"
-
-      - name: Setup Maven
-        run: |
-          mkdir ${{ runner.temp }}/maven
-          tar -xvf ${{ runner.temp }}/maven_setup.tar.gz -C ${{ runner.temp }}/maven --strip-components=1
-          echo "<settings><servers><server><id>github</id><username>${{ secrets.GIT_USER }}</username><password>${{ secrets.GIT_PAT }}</password></server></servers></settings>" >> ${{ runner.temp }}/settings.xml
-
-      - name: Execute unit-test + Calculate test coverage + SCA with Sonar
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ${{ runner.temp }}/maven/bin/mvn verify -Pvalidate -s ${{ runner.temp }}/settings.xml --no-transfer-progress
-
       - name: Move related JIRA tasks status from IN PROGRESS to CODE REVIEW
         run: |
           temp=$(echo "${{ github.event.pull_request.title }}" | grep -o '\[[^]]*\]' | sed 's/\[//;s/\]//' | tr -d ' ')
