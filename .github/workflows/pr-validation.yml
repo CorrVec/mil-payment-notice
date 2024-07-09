@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Move related JIRA tasks status from IN PROGRESS to CODE REVIEW
         env:
-            GITHUB_TOKEN: ${{ github.actor }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           temp=$(echo "${{ github.event.pull_request.title }}" | grep -o '\[[^]]*\]' | sed 's/\[//;s/\]//' | tr -d ' ')
           IFS=$',' read -ra keys <<< "$temp"
