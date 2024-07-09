@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout the source code
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+    
       - name: Move related JIRA tasks status from IN PROGRESS to CODE REVIEW
         env:
             GITHUB_TOKEN: ${{ secrets.SUPER_SECRET }}
